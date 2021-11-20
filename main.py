@@ -1,4 +1,7 @@
 from src.calendar_manager import CalendarManager
+from src.load import load_creds, load_idlist
+from src.define_format import decord_date, decord_datetime
+from src.event import DateEvent, DatetimeEvent
 import os
 
 # 標準出力にて選択肢を数字で与えて入力を受け取る関数
@@ -54,6 +57,7 @@ def set_year_and_month(today):
      return today.year, month
 
 def main():
+
   # accountフォルダに入っているフォルダ名を全て取得
   account = set_account(account_folder='account')
 
@@ -82,16 +86,33 @@ def main():
       if idx == 0:
         print('日付を「,」区切りで入力してください。(終了の場合、0を入力)')
       else:
-        print('日付・時間を「,」入力してください。(終了の場合、0を入力)')
+        print('日付・時間を「,」区切りで入力してください。(終了の場合、0を入力)')
 
       data = input().replace(' ', '')
       if data == '0':
         break
 
+      data = data.split(',')
+
       if idx == 0:
-        manager.add_allday(id=event_id, title=title, year=year, month=month, dates_str=data)
+        for my_date in data:
+          st_date, fn_date = decord_date(year, month, my_date)
+          event = DateEvent(st_date=st_date, fn_date=fn_date, title=title)
+
       else:
-        manager.add(id=event_id, title=title, year=year, month=month, datetimes_str=data, rename=(idx==2))
+        for my_datetime in data:
+          st_datetime, fn_datetime = decord_datetime(year, month, my_datetime)
+          if idx == 3:
+            title_time = '(' + st_datetime.strftime('%H:%M') + '-' + fn_datetime.strftime('%H:%M') + ')'
+            title += title_time
+          event = DatetimeEvent(st_dtime=st_datetime, fn_dtime=fn_datetime, title=title)
+      
+      manager.write(event_id, event)
+
+      print(f'\n・Registration Success：{event.title}=========================')
+      print(event.get_term())
+      print()
+
       
       print(f'まだ {account} の編集を続けますか？')
       idx = input_idx(['違う月を入力', '違う予定を入力', '終了'])
