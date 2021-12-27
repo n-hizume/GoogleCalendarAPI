@@ -67,7 +67,6 @@ class CalendarManager:
     # And print Schedule info
     def write(self, id, event):
         body = event.get_body()
-        print(body)
         post = self.service.events().insert(calendarId=id, body=body).execute()
         
         return post

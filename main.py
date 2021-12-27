@@ -1,5 +1,4 @@
 from src.calendar_manager import CalendarManager
-from src.load import load_creds, load_idlist
 from src.define_format import decord_date, decord_datetime
 from src.event import DateEvent, DatetimeEvent
 import os
@@ -56,6 +55,12 @@ def set_year_and_month(today):
   else:
      return today.year, month
 
+def cout_register_event(event):
+  print(f'\n・Registration Success：{event.title}=========================')
+  print(event.get_term())
+  print()
+
+
 def main():
 
   # accountフォルダに入っているフォルダ名を全て取得
@@ -98,20 +103,22 @@ def main():
         for my_date in data:
           st_date, fn_date = decord_date(year, month, my_date)
           event = DateEvent(st_date=st_date, fn_date=fn_date, title=title)
+          manager.write(event_id, event)
+          cout_register_event(event)
 
       else:
         for my_datetime in data:
           st_datetime, fn_datetime = decord_datetime(year, month, my_datetime)
-          if idx == 3:
+          if idx == 2:
             title_time = '(' + st_datetime.strftime('%H:%M') + '-' + fn_datetime.strftime('%H:%M') + ')'
-            title += title_time
-          event = DatetimeEvent(st_dtime=st_datetime, fn_dtime=fn_datetime, title=title)
+            new_title = title + title_time
+          else:
+            new_title = title
+          event = DatetimeEvent(st_dtime=st_datetime, fn_dtime=fn_datetime, title=new_title)
+          manager.write(event_id, event)
+          cout_register_event(event)
       
-      manager.write(event_id, event)
 
-      print(f'\n・Registration Success：{event.title}=========================')
-      print(event.get_term())
-      print()
 
       
       print(f'まだ {account} の編集を続けますか？')
@@ -127,3 +134,5 @@ def main():
 if __name__ == '__main__':
   main()
 
+
+# 7/16-22, 10/16-20, 13/18-22, 15/17-22, 23/14-20, 27/18-22, 29/18-22
