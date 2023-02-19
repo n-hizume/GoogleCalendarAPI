@@ -2,19 +2,16 @@ from datetime import date, datetime, timedelta
 
 # Give these Model to CalendarManagar, and Register Google Calendar
 
-# get_json(): Convert Model to json for Google API
+# get_body(): Convert Model to json for Google API
 # get_term(): get <str> '{start_datetime}~{finish_datetime}'
 
 class Event:
-    title = None
-    location = None
-    detail = None
-    timezone = 'Japan'
 
     def __init__(self, title='no title', location='', detail=''):
         self.title = title
         self.location = location
         self.detail = detail
+        self.timezone = 'Japan'
 
     def get_body(self):
         return {
@@ -26,7 +23,7 @@ class Event:
         }
     
         
-class DatetimeEvent(Event):
+class NormalEvent(Event):
     def __init__(self, st_dtime: datetime, fn_dtime: datetime, title='no title', location='', detail=''):
         super().__init__(title, location, detail)
         self.st_dtime = st_dtime
@@ -44,7 +41,7 @@ class DatetimeEvent(Event):
       return self.st_dtime.strftime('%Y/%m/%d %H:%M') +' ~ '+ self.fn_dtime.strftime('%Y/%m/%d %H:%M')
 
 
-class DateEvent(Event):
+class AllDayEvent(Event):
     def __init__(self, st_date: date, fn_date: date, title='no title', location='', detail=''):
         super().__init__(title, location, detail)
         self.st_date = st_date

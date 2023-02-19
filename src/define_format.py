@@ -1,5 +1,5 @@
 import re
-from datetime import date, datetime, time, timedelta
+from datetime import date, datetime, timedelta
 from dateutil.relativedelta import relativedelta
 
 
@@ -13,8 +13,7 @@ re_time = '([0-9]{1,2}|[0-9]{1,2}:[0-9]{1,2})'
 def decord_re_time(strtime):
     m = re.fullmatch('([0-9]{1,2}):([0-9]{1,2})', strtime)
     if m:
-        [hour, minute] = m.groups()
-        hour, minute = int(hour), int(minute)
+        [hour, minute] = [int(v) for v in m.groups()]
     else:
         hour = int(strtime)
         minute = 0
@@ -35,28 +34,26 @@ def decord_date(year, month, date_str):
 
   m = re.fullmatch(pattern1, date_str)
   if m:
-    [day, days] = m.groups()
-    st_date = date(year, month, int(day))
-    fn_date = st_date + timedelta(days=int(days)-1)
+    [day, days] = [int(v) for v in m.groups()]
+    st_date = date(year, month, day)
+    fn_date = st_date + timedelta(days=days-1)
     return st_date, fn_date
 
   m = re.fullmatch(pattern2, date_str)
   if m:
-    [st_day, fn_day] = m.groups()
-    st_date = date(year, month, int(st_day))
-    fn_date = date(year, month, int(fn_day))
+    [st_day, fn_day] = [int(v) for v in m.groups()]
+    st_date = date(year, month, st_day)
+    fn_date = date(year, month, fn_day)
     if st_date < fn_date:
       return st_date, fn_date
     
-    else:
-      fn_date += relativedelta(months=1)
-    
+    fn_date += relativedelta(months=1)
     return st_date, fn_date
 
   m = re.fullmatch(pattern3, date_str)
   if m:
-    [day] = m.groups()
-    st_date = date(year, month, int(day))
+    day = int(m.group())
+    st_date = date(year, month, day)
     return st_date, st_date
 
 
@@ -107,8 +104,9 @@ def decord_datetime(year, month, datetime_str):
   m = re.fullmatch(pattern3, datetime_str)
   if m:
     [day, st_time] = m.groups()
+    day = int(day)
     st_h, st_m , inc = decord_re_time(st_time)
-    st_datetime = datetime(year, month, int(day), st_h, st_m)
+    st_datetime = datetime(year, month, day, st_h, st_m)
     if inc:
       st_datetime += timedelta(days=1)
 

@@ -10,11 +10,6 @@ from datetime import date
 
 
 class CalendarManager:
-    account_name = ''
-    account_folder = ''
-    service = ''
-    idlist = ''
-    today = ''
 
     def __init__(self, account_name):
         self.account_name = account_name
