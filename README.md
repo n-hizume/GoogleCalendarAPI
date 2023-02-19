@@ -1,4 +1,4 @@
-# Google Calender API
+# Google Calender Manager
 Googleカレンダーに似たような予定を大量に追加したい際に、わざわざアプリやWEBから一個一個登録するのが面倒なので、一括登録できるものを作成しました。
 
 
