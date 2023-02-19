@@ -4,7 +4,7 @@ Googleカレンダーに似たような予定を大量に追加したい際に�
 
 ## APIの有効化
 Google PlatFormにて認証などをしてjsonファイルをダウンロードします。
-数年前と手順が違うっぽいです。現在はこのサイト(https://ateruimashin.com/diary/2021/02/google-calender-api/)を参考にしたらできると思います。
+数年前と手順が違うっぽいです。現在はこのサイト(https://ateruimashin.com/diary/2021/02/google-calender-api/ )を参考にしたらできると思います。
 ダウンロードしたjsonファイルは`credentials.json`とリネームしたのち、`account/{your_account_name}/`に格納してください。
 
 `{your_account_name}`のところは任意の文字列でいいので、Googleアカウント名(`○○@gmail.com`の`○○`の部分)とかを使用するといいと思います。
