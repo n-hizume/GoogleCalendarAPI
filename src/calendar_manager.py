@@ -8,7 +8,6 @@ import json
 from datetime import date
 
 
-
 class CalendarManager:
 
     def __init__(self, account_name):
@@ -21,38 +20,39 @@ class CalendarManager:
     # To Use Google API, Road a neccessary json file
     def load_creds(self):
         creds = None
-        SCOPES = ['https://www.googleapis.com/auth/calendar']
+        scopes = ['https://www.googleapis.com/auth/calendar']
 
         tokenfile = os.path.join(self.account_folder, 'token.picle')
 
-        # if you have token file
+        # if you have a token file
         if os.path.exists(tokenfile):
             with open(tokenfile, 'rb') as token:
                 creds = pickle.load(token)
-        
+
         if not creds or not creds.valid:
             # if token file is not available
             if creds and creds.expired and creds.refresh_token:
                 creds.refresh(Request())
             # if you don't have token file
             else:
-                flow = InstalledAppFlow.from_client_secrets_file(os.path.join(self.account_folder, 'credentials.json'), SCOPES)
+                flow = InstalledAppFlow.from_client_secrets_file(
+                    os.path.join(self.account_folder, 'credentials.json'), scopes)
                 creds = flow.run_local_server(port=0)
 
             with open(tokenfile, 'wb') as token:
                 pickle.dump(creds, token)
 
         return build('calendar', 'v3', credentials=creds)
-    
+
     # load 'account/{account_name}/idlist.json and return its dict for python
     def load_idlist(self):
-        json_path = os.path.join( self.account_folder, 'idlist.json')
+        json_path = os.path.join(self.account_folder, 'idlist.json')
         with open(json_path, 'rb') as file:
             return json.load(file)
 
     # Get key list of "account/{account_name}/idlist.json"
     def get_key_list(self):
-        return [ key for key in self.idlist.keys() ]
+        return list(self.idlist.keys())
 
     # Get Calendar ID from idlist.json
     def get_id(self, key):
@@ -63,5 +63,5 @@ class CalendarManager:
     def write(self, id, event):
         body = event.get_body()
         post = self.service.events().insert(calendarId=id, body=body).execute()
-        
+
         return post
