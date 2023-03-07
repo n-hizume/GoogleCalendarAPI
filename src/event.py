@@ -5,6 +5,7 @@ from datetime import date, datetime, timedelta
 # get_body(): Convert Model to json for Google API
 # get_term(): get <str> '{start_datetime}~{finish_datetime}'
 
+
 class Event:
 
     def __init__(self, title='no title', location='', detail=''):
@@ -18,11 +19,11 @@ class Event:
             'summary': self.title,
             'description': self.detail,
             'location': self.location,
-            'start': { 'timeZone': self.timezone },
-            'end': { 'timeZone': self.timezone }
+            'start': {'timeZone': self.timezone},
+            'end': {'timeZone': self.timezone}
         }
-    
-        
+
+
 class NormalEvent(Event):
     def __init__(self, st_dtime: datetime, fn_dtime: datetime, title='no title', location='', detail=''):
         super().__init__(title, location, detail)
@@ -34,11 +35,10 @@ class NormalEvent(Event):
         body['start']['dateTime'] = self.st_dtime.isoformat(),
         body['end']['dateTime'] = self.fn_dtime.isoformat(),
 
-        
         return body
 
     def get_term(self):
-      return self.st_dtime.strftime('%Y/%m/%d %H:%M') +' ~ '+ self.fn_dtime.strftime('%Y/%m/%d %H:%M')
+        return self.st_dtime.strftime('%Y/%m/%d %H:%M') + ' ~ ' + self.fn_dtime.strftime('%Y/%m/%d %H:%M')
 
 
 class AllDayEvent(Event):
@@ -51,12 +51,13 @@ class AllDayEvent(Event):
         body = super().get_body()
         body['allDayEvent'] = True
         body['start']['date'] = self.st_date.strftime('%Y-%m-%d')
-        body['end']['date'] = (self.fn_date + timedelta(days=1)).strftime('%Y-%m-%d')
+        body['end']['date'] = (
+            self.fn_date + timedelta(days=1)).strftime('%Y-%m-%d')
 
         return body
 
     def get_term(self):
-      if self.st_date == self.fn_date:
-        return self.st_date.strftime('%Y/%m/%d')
-      else:
-        return self.st_date.strftime('%Y/%m/%d') +' ~ '+ self.fn_date.strftime('%Y/%m/%d')
+        if self.st_date == self.fn_date:
+            return self.st_date.strftime('%Y/%m/%d')
+        else:
+            return self.st_date.strftime('%Y/%m/%d') + ' ~ ' + self.fn_date.strftime('%Y/%m/%d')
