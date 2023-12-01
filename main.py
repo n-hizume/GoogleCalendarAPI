@@ -1,5 +1,5 @@
 from src.calendar_manager import CalendarManager
-from src.define_format import decord_date, decord_datetime
+from src.define_format import decode_date, decode_datetime
 from src.event import AllDayEvent, NormalEvent
 import os
 
@@ -124,7 +124,7 @@ def main():
             if idx == 0:
                 for my_date in data:
                     try:
-                        st_date, fn_date = decord_date(year, month, my_date)
+                        st_date, fn_date = decode_date(year, month, my_date)
                     except:
                         print(f'Cannot parse "{my_date}"')
                         continue
@@ -136,7 +136,7 @@ def main():
             else:
                 for my_datetime in data:
                     try:
-                        st_datetime, fn_datetime = decord_datetime(
+                        st_datetime, fn_datetime = decode_datetime(
                             year, month, my_datetime)
                     except:
                         print(f'Cannot parse "{my_datetime}"')

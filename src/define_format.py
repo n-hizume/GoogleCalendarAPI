@@ -10,7 +10,7 @@ re_time = '([0-9]{1,2}|[0-9]{1,2}:[0-9]{1,2})'
 
 
 # Receive re_time<string>, such as '06:30', '7:00', '9', and Return (hour, minute)<int>
-def decord_re_time(strtime):
+def decode_re_time(strtime):
     m = re.fullmatch('([0-9]{1,2}):([0-9]{1,2})', strtime)
     if m:
         [hour, minute] = [int(v) for v in m.groups()]
@@ -27,7 +27,7 @@ def decord_re_time(strtime):
 # 2. '{day}-{day}': if day.second < day.first, day.second is judged as next month
 # 3. '{day}'
 # return st_date, fn_date
-def decord_date(year, month, date_str):
+def decode_date(year, month, date_str):
     pattern1 = f'{re_day}\*{re_days}'
     pattern2 = f'{re_day}-{re_day}'
     pattern3 = f'{re_day}'
@@ -62,7 +62,7 @@ def decord_date(year, month, date_str):
 # 2. '{day}/{time}-{time}: if time.first > time.second, time.second will be judged as tommorow
 # 3. '{day}/{time}
 # return st_datetime, fn_datetime
-def decord_datetime(year, month, datetime_str):
+def decode_datetime(year, month, datetime_str):
     pattern1 = f'{re_day}/{re_time}\+{re_time}'
     pattern2 = f'{re_day}/{re_time}-{re_time}'
     pattern3 = f'{re_day}/{re_time}'
@@ -72,12 +72,12 @@ def decord_datetime(year, month, datetime_str):
         [day, st_time, delta_time] = m.groups()
         day = int(day)
 
-        st_h, st_m, inc = decord_re_time(st_time)
+        st_h, st_m, inc = decode_re_time(st_time)
         st_datetime = datetime(year, month, day, st_h, st_m)
         if inc:
             st_datetime += timedelta(days=1)
 
-        delta_h, delta_m, inc = decord_re_time(delta_time)
+        delta_h, delta_m, inc = decode_re_time(delta_time)
         if inc:
             delta_h += 24
         fn_datetime = st_datetime + timedelta(hours=delta_h, minutes=delta_m)
@@ -89,12 +89,12 @@ def decord_datetime(year, month, datetime_str):
         [day, st_time, fn_time] = m.groups()
         day = int(day)
 
-        st_h, st_m, st_inc = decord_re_time(st_time)
+        st_h, st_m, st_inc = decode_re_time(st_time)
         st_datetime = datetime(year, month, day, st_h, st_m)
         if st_inc:
             st_datetime += timedelta(days=1)
 
-        fn_h, fn_m, fn_inc = decord_re_time(fn_time)
+        fn_h, fn_m, fn_inc = decode_re_time(fn_time)
         fn_datetime = datetime(year, month, day, fn_h, fn_m)
         if fn_inc or st_datetime > fn_datetime:
             fn_datetime += timedelta(days=1)
@@ -105,7 +105,7 @@ def decord_datetime(year, month, datetime_str):
     if m:
         [day, st_time] = m.groups()
         day = int(day)
-        st_h, st_m, inc = decord_re_time(st_time)
+        st_h, st_m, inc = decode_re_time(st_time)
         st_datetime = datetime(year, month, day, st_h, st_m)
         if inc:
             st_datetime += timedelta(days=1)
